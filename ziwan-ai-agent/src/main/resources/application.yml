@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: ziwan-ai-agent
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ziwan_ai_agent
+    username: ${spring.database.username}
+    password: ${spring.datasource.password}
+  ai:
+    vectorstore:
+      pgvector:
+        index-type: HNSW
+        dimensions: 1536
+        distance-type: COSINE_DISTANCE
+        max-document-batch-size: 10000 # Optional: Maximum number of documents per batch
+    dashscope:
+      api-key: ${spring.ai.dashscope.api-key}
+      chat:
+        options:
+          model: qwen-plus
+
+      mcp:
+        client:
+          stdio:
+            servers-configuration: classpath:mcp-servers.json
+
+
+
+server:
+  port: 8081
+  servlet:
+      context-path: /api
+
+
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.example.ziwanaiagent.controller
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
+
+search-api:
+  api-key: ${search-api.api-key}
